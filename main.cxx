@@ -1,3 +1,6 @@
+#include "http_helper.hxx"
+#include <boost/beast/http/status.hpp>
+#include <cstddef>
 #include <limits.h>
 #include <netinet/in.h>
 #include <pthread.h>
@@ -13,7 +16,7 @@
 #include <memory>
 #include <sstream>
 
-#define PORT 40535
+#define PORT 8848
 #define MAX_HTTP_LEN 2048
 
 void* handle_connection(void* arg) {
@@ -48,19 +51,8 @@ void* handle_connection(void* arg) {
       std::cout << "Message Body: " << req.body() << std::endl;
 
       // 返回http response
-      const std::string body{"Hello from Boost & Linux Socket!\n"};
-      http::response<http::string_body> response{};
-      response.version(req.version());
-      response.result(http::status::ok);
-      response.set(http::field::server, "MXY SERVER");
-      response.set(http::field::content_length, std::to_string(body.size()));
-      response.set(http::field::content_type, "text/html");
-      response.keep_alive(true);
-      
-      const std::string headers = boost::lexical_cast<std::string>(response.base());
-      
-      const auto response_str = headers + body;
-      write(new_socket_fd, response_str.c_str(), response_str.size());
+      const auto response = mxy::http_helper::make_response(req);
+      write(new_socket_fd, response.data(), response.size());
     } else {
       std::cerr << "Failed to parse HTTP request" << std::endl;
     }
