@@ -55,8 +55,9 @@ void *handle_connection(void *arg) {
 
     // write(new_socket_fd, buffer.data(), bytes_from_data_server);
     send(new_socket_fd, buffer.data(), bytes_from_data_server, 0);
-
     std::cout << "write back: " << buffer.substr(0, bytes_from_data_server) << std::endl;
+    shutdown(fd, SHUT_WR);
+    shutdown(new_socket_fd, SHUT_WR);
     std::fill(buffer.begin(), buffer.end(), 0);
   }
 }
