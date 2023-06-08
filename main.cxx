@@ -14,7 +14,6 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
-#include <ranges>
 #include <vector>
 
 #define PORT 8082
@@ -49,7 +48,7 @@ void *handle_connection(void *arg) {
 
     std::cout << "write to data-server: " << buffer.substr(0, bytes_recieved) << std::endl;
 
-    std::ranges::fill(buffer, 0);
+    std::fill(buffer.begin(), buffer.end(), 0);
     const size_t bytes_from_data_server = recv(fd, buffer.data(), MAX_HTTP_LEN, 0);
 
     std::cout << "recv from data-server: " << buffer.substr(0, bytes_from_data_server) << std::endl;
@@ -58,7 +57,7 @@ void *handle_connection(void *arg) {
     send(new_socket_fd, buffer.data(), bytes_from_data_server, 0);
 
     std::cout << "write back: " << buffer.substr(0, bytes_from_data_server) << std::endl;
-    std::ranges::fill(buffer, 0);
+    std::fill(buffer.begin(), buffer.end(), 0);
   }
 }
 
