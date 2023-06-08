@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 find_package(Boost REQUIRED COMPONENTS system thread serialization)
 
-add_executable(${PROJECT_NAME} main.cxx http_helper.hxx )
+add_executable(${PROJECT_NAME} main.cxx)
 
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
